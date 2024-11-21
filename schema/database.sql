@@ -1,38 +1,37 @@
-CREATE TABLE users(
-    id INT GENERATED ALWAYS AS IDENTITY,
-    username VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255),
-    PRIMARY KEY (user_id)
+CREATE TABLE Genre (
+    genre_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
-CREATE TABLE movie(
-    id INT GENERATED ALWAYS AS IDENTITY,
-    title VARCHAR(255),
-    release_year INT,
+
+CREATE TABLE Movie (
+    movie_id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    release_year INT NOT NULL,
     genre_id INT,
-    PRIMARY KEY (movie_id),
-    FOREIGN KEY (genre_id)
+    FOREIGN KEY (genre_id) REFERENCES Genre(genre_id)
 );
-CREATE TABLE genre(
-    id INT GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR(255),
-    PRIMARY KEY (genre_id)
+
+CREATE TABLE Users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
 );
-CREATE TABLE favorite(
-    id INT GENERATED ALWAYS AS IDENTITY,
-    movie_id INT,
-    user_id INT,
-    PRIMARY KEY (favorite_id),
-    FOREIGN KEY (movie_id),
-    FOREIGN KEY (user_id)
+
+CREATE TABLE Review (
+    review_id SERIAL PRIMARY KEY,
+    rating INT CHECK (rating BETWEEN 1 AND 10),
+    comment TEXT,
+    movie_id INT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
-CREATE TABLE review(
-    id INT GENERATED ALWAYS AS IDENTITY,
-    rating INT,
-    comment VARCHAR(255),
-    movie VARCHAR(255),
-    review_text TEXT,
-    PRIMARY KEY (id),
-    FOREIGN KEY (movie_id),
-    FOREIGN KEY (user_id)
-)
+
+CREATE TABLE Favorite (
+    favorite_id SERIAL PRIMARY KEY,
+    movie_id INT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES Movie(movie_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
